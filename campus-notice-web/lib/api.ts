@@ -1,7 +1,7 @@
 const defaultApiBaseUrl = "http://localhost:8080";
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || defaultApiBaseUrl;
+export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || defaultApiBaseUrl).replace(/\/$/, "");
+
 export const INTERESTS_KEY = "selected_categories";
 
 export const SOURCE_LABELS = {

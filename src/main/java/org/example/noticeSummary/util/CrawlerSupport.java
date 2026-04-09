@@ -33,6 +33,7 @@ public class CrawlerSupport {
         options.addArguments("--headless=new");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--window-size=1400,1200");
 
         return new ChromeDriver(options);
