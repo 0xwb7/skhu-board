@@ -6,6 +6,8 @@ app:
       max-requests: 120
   crawl:
     schedule-enabled: true
+    web-driver:
+      browser-path: ${CHROME_BIN:/usr/bin/google-chrome}
     internal-api:
       enabled: false
 

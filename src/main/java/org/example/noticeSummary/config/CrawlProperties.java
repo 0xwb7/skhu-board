@@ -5,12 +5,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.crawl")
 public record CrawlProperties(
         boolean scheduleEnabled,
-        InternalApi internalApi
+        InternalApi internalApi,
+        WebDriver webDriver
 ) {
 
     public record InternalApi(
             boolean enabled,
             String key
+    ) {
+    }
+
+    public record WebDriver(
+            String browserPath
     ) {
     }
 }

@@ -1,10 +1,14 @@
 package org.example.noticeSummary.util;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.noticeSummary.config.CrawlProperties;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,11 +16,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class CrawlerSupport {
+
+    private static final String DEFAULT_BROWSER_PATH = "/usr/bin/google-chrome";
 
     @Value("${lms.id}")
     private String lmsId;
@@ -26,17 +36,48 @@ public class CrawlerSupport {
 
     private static final String LOGIN_URL = "https://lms.skhu.ac.kr/ilos/main/member/login_form.acl";
 
+    private final CrawlProperties crawlProperties;
+
     public WebDriver createWebDriver() {
         WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
+        String browserPath = resolveBrowserPath();
+        options.setBinary(browserPath);
         options.addArguments("--headless=new");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--window-size=1400,1200");
 
-        return new ChromeDriver(options);
+        try {
+            log.info("Starting Chrome WebDriver with browser binary at {}", browserPath);
+            return new ChromeDriver(options);
+        } catch (WebDriverException exception) {
+            throw new IllegalStateException(
+                    "Failed to start Chrome WebDriver. Verify that Chrome is installed and executable at " + browserPath,
+                    exception
+            );
+        }
+    }
+
+    private String resolveBrowserPath() {
+        String configuredPath = crawlProperties.webDriver() != null
+                ? crawlProperties.webDriver().browserPath()
+                : null;
+        String browserPath = hasText(configuredPath) ? configuredPath : DEFAULT_BROWSER_PATH;
+
+        if (!Files.isExecutable(Path.of(browserPath))) {
+            throw new IllegalStateException(
+                    "Chrome browser binary is not available or not executable at " + browserPath
+            );
+        }
+
+        return browserPath;
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     public void login(WebDriver driver, WebDriverWait wait) {

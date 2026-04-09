@@ -60,6 +60,8 @@ RUN apt-get update && apt-get install -y \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
  && apt-get install -y google-chrome-stable \
+ && ln -sf /usr/bin/google-chrome-stable /usr/bin/google-chrome \
+ && google-chrome --version \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/app.jar app.jar
