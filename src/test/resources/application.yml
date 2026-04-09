@@ -1,0 +1,32 @@
+openai:
+  api-key: test-key
+
+lms:
+  id: test-user
+  password: test-password
+
+app:
+  web:
+    allowed-origins:
+      - http://localhost:3000
+  api:
+    rate-limit:
+      enabled: true
+      window-seconds: 60
+      max-requests: 120
+  crawl:
+    schedule-enabled: false
+    internal-api:
+      enabled: false
+      key: test-internal-key
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

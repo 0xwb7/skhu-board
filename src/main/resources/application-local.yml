@@ -1,0 +1,22 @@
+app:
+  web:
+    allowed-origins:
+      - http://localhost:3000
+      - http://127.0.0.1:3000
+      - http://localhost:5173
+      - http://127.0.0.1:5173
+  api:
+    rate-limit:
+      enabled: true
+      window-seconds: 60
+      max-requests: 300
+  crawl:
+    schedule-enabled: true
+    internal-api:
+      enabled: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
