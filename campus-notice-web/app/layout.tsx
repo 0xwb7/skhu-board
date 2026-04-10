@@ -3,8 +3,13 @@ import { SiteShell } from "@/app/_components/site-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Campus Notice Radar",
+  title: "SKHU Board",
   description: "성공회대 학교 공지와 LMS 공지를 한 번에 모아보는 서비스",
+  icons: {
+    icon: "/skhu-logo.svg",
+    shortcut: "/skhu-logo.svg",
+    apple: "/skhu-logo.svg",
+  },
 };
 
 export default function RootLayout({

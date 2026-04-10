@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -6,6 +7,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <header className="site-header">
         <div className="site-header-inner">
           <Link href="/" className="brand-link">
+            <Image
+              src="/skhu-logo.svg"
+              alt="성공회대학교 로고"
+              className="brand-mark"
+              width={40}
+              height={40}
+              priority
+            />
             <span className="brand-title">
               SKHU <span>Board</span>
             </span>
@@ -28,6 +37,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <footer className="site-footer">
         <div className="site-footer-inner">
           <div className="footer-logo">
+            <Image
+              src="/skhu-logo.svg"
+              alt="성공회대학교 로고"
+              className="brand-mark"
+              width={36}
+              height={36}
+            />
             <span className="brand-title">
               SKHU <span>Board</span>
             </span>
