@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +27,14 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class CrawlerSupport {
 
-    private static final String DEFAULT_BROWSER_PATH = "/usr/bin/google-chrome";
+    private static final List<String> DEFAULT_BROWSER_PATHS = List.of(
+            "/usr/bin/google-chrome",
+            "/usr/bin/google-chrome-stable",
+            "/usr/bin/chromium",
+            "/usr/bin/chromium-browser",
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Chromium.app/Contents/MacOS/Chromium"
+    );
 
     @Value("${lms.id}")
     private String lmsId;
@@ -65,15 +73,23 @@ public class CrawlerSupport {
         String configuredPath = crawlProperties.webDriver() != null
                 ? crawlProperties.webDriver().browserPath()
                 : null;
-        String browserPath = hasText(configuredPath) ? configuredPath : DEFAULT_BROWSER_PATH;
 
-        if (!Files.isExecutable(Path.of(browserPath))) {
-            throw new IllegalStateException(
-                    "Chrome browser binary is not available or not executable at " + browserPath
-            );
+        if (hasText(configuredPath)) {
+            if (!Files.isExecutable(Path.of(configuredPath))) {
+                throw new IllegalStateException(
+                        "Chrome browser binary is not available or not executable at " + configuredPath
+                );
+            }
+            return configuredPath;
         }
 
-        return browserPath;
+        return DEFAULT_BROWSER_PATHS.stream()
+                .filter(path -> Files.isExecutable(Path.of(path)))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "Chrome browser binary is not available. Checked configured path and defaults: "
+                                + String.join(", ", DEFAULT_BROWSER_PATHS)
+                ));
     }
 
     private boolean hasText(String value) {

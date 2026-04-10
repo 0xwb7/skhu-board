@@ -16,7 +16,7 @@ app:
   crawl:
     schedule-enabled: false
     web-driver:
-      browser-path: ${CHROME_BIN:/usr/bin/google-chrome}
+      browser-path: ${CHROME_BIN:}
     internal-api:
       enabled: false
       key: ${INTERNAL_API_KEY:}
